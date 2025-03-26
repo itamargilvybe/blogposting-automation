@@ -1,0 +1,8 @@
+openai
+gspread
+oauth2client
+python-dotenv
+requests
+modal
+Pillow 
+promptlayer

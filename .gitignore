@@ -1,0 +1,5 @@
+.env
+__pycache__/
+debug/
+*.pyc
+mindcheck-391116-7c830920ce8b.json
