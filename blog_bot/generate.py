@@ -21,10 +21,12 @@ def generate_blog_post(keyword):
 
         print("Fetched all available MindCheck URLs from sitemap")
 
-        prompt_name = "SEO_Blog_Post_Generation"
+        # STEP 1: Generate the blog post
+        prompt_name = "MINDCHECK_BLOG_STEP1"
         input_variables = {"keyword": keyword, "formatted_links": formatted_links}
         template = pl_client.templates.get(prompt_name, {"input_variables": input_variables})
         prompt = template['llm_kwargs']['messages'][1]['content'][0]['text']
+        system_prompt = template['llm_kwargs']['messages'][0]['content']
 
         print("Prompt:", prompt)
 
@@ -32,9 +34,9 @@ def generate_blog_post(keyword):
         
         client = OpenAI()
         response = client.chat.completions.create(
-            model="gpt-4",
+            model="gpt-4o",
             messages=[
-                {"role": "system", "content": "You are a skilled SEO blog writer."},
+                {"role": "system", "content": system_prompt},
                 {"role": "user", "content": prompt}
             ],
             temperature=0.7,
@@ -45,6 +47,31 @@ def generate_blog_post(keyword):
         # Get the content and parse it as JSON
         content = response.choices[0].message.content
         print("Raw content:", content)
+
+        # STEP 2: Generate the structured response
+        prompt_name = "MINDCHECK_BLOG_STEP2"
+        input_variables = {"plain_article": content}
+        template = pl_client.templates.get(prompt_name, {"input_variables": input_variables})
+        prompt = template['llm_kwargs']['messages'][1]['content'][0]['text']
+        system_prompt = template['llm_kwargs']['messages'][0]['content']
+
+        print("Sending request to OpenAI...")
+        
+        client = OpenAI()
+        response = client.chat.completions.create(
+            model="gpt-4o",
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": prompt}
+            ],
+            temperature=0.5,
+            pl_tags=["blog-generation"]
+        )
+        print("Got response from OpenAI")
+        
+        # Get the content and parse it as JSON
+        content = response.choices[0].message.content
+        print("Structured response:", content)
         
         try:
             # Try to find JSON in the content

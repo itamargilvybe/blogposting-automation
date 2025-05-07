@@ -29,7 +29,7 @@ image = modal.Image.debian_slim().pip_install(
 def test():
     print("hey")
 
-@app.function(image=image, secrets=[modal.Secret.from_name("custom-secret")], schedule=modal.Cron("0 4 * * *"))
+# @app.function(image=image, secrets=[modal.Secret.from_name("custom-secret")], schedule=modal.Cron("0 4 * * *"))
 def daily_blog_post():
     try:
         print("Starting daily blog automation...")

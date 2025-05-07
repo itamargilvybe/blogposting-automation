@@ -14,3 +14,4 @@ Install dependencies:
 Notes:
 - Make sure that you're adding an .env file (based on .env.sample file)
 - Remember to add the secrets in the Modal app
+- Remeber to give the Google Service account sheet editing permissions for the keywords spreadsheet

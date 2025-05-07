@@ -19,7 +19,7 @@ def open_spreadsheet(spreadsheet_name):
         sheet = gc.open(spreadsheet_name)
         return sheet
     except Exception as e:
-        print(f"Error opening spreadsheet: {e}")
+        print(f"Error opening spreadsheet: {type(e).__name__}: {e}")
         return None
 
 def get_unused_keyword():
